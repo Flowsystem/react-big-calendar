@@ -8,11 +8,10 @@ import chunk from 'lodash/chunk'
 
 import { navigate, views } from './utils/constants'
 import { notify } from './utils/helpers'
-import getPosition from 'dom-helpers/position'
 import * as animationFrame from 'dom-helpers/animationFrame'
 
 import Popup from './Popup'
-import Overlay from 'react-overlays/Overlay'
+import Popover from 'react-popover'
 import DateContentRow from './DateContentRow'
 import Header from './Header'
 import DateHeader from './DateHeader'
@@ -89,7 +88,6 @@ class MonthView extends React.Component {
           {this.renderHeaders(weeks[0])}
         </div>
         {weeks.map(this.renderWeek)}
-        {this.props.popup && this.renderOverlay()}
       </div>
     )
   }
@@ -135,6 +133,7 @@ class MonthView extends React.Component {
         renderHeader={this.readerDateHeading}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
+        renderPopover={this.renderPopover}
         onSelect={this.handleSelectEvent}
         onDoubleClick={this.handleDoubleClickEvent}
         onKeyPress={this.handleKeyPressEvent}
@@ -194,8 +193,8 @@ class MonthView extends React.Component {
     ))
   }
 
-  renderOverlay() {
-    let overlay = (this.state && this.state.overlay) || {}
+  renderPopover = showMore => {
+    let popover = (this.state && this.state.popover) || {}
     let {
       accessors,
       localizer,
@@ -203,37 +202,36 @@ class MonthView extends React.Component {
       getters,
       selected,
       popupOffset,
+      ...restProps
     } = this.props
 
     return (
-      <Overlay
-        rootClose
-        placement="bottom"
-        show={!!overlay.position}
-        onHide={() => this.setState({ overlay: null })}
-        target={() => overlay.target}
-      >
-        {({ props }) => (
+      <Popover
+        preferPlace="above"
+        isOpen={popover.visible}
+        onOuterAction={this.hidePopover}
+        body={
           <Popup
-            {...props}
+            {...restProps}
             popupOffset={popupOffset}
             accessors={accessors}
             getters={getters}
             selected={selected}
             components={components}
             localizer={localizer}
-            position={overlay.position}
-            show={this.overlayDisplay}
-            events={overlay.events}
-            slotStart={overlay.date}
-            slotEnd={overlay.end}
+            show={this.hidePopover}
+            events={popover.events}
+            slotStart={popover.date}
+            slotEnd={popover.end}
             onSelect={this.handleSelectEvent}
             onDoubleClick={this.handleDoubleClickEvent}
             onKeyPress={this.handleKeyPressEvent}
             handleDragStart={this.props.handleDragStart}
           />
-        )}
-      </Overlay>
+        }
+      >
+        {showMore}
+      </Popover>
     )
   }
 
@@ -272,16 +270,18 @@ class MonthView extends React.Component {
     notify(this.props.onKeyPressEvent, args)
   }
 
-  handleShowMore = (events, date, cell, slot, target) => {
+  handleShowMore = (events, date, cell, slot) => {
     const { popup, onDrillDown, onShowMore, getDrilldownView } = this.props
     //cancel any pending selections so only the event click goes through.
     this.clearSelection()
 
     if (popup) {
-      let position = getPosition(cell, findDOMNode(this))
-
       this.setState({
-        overlay: { date, events, position, target },
+        popover: {
+          visible: true,
+          date,
+          events,
+        },
       })
     } else {
       notify(onDrillDown, [date, getDrilldownView(date) || views.DAY])
@@ -290,9 +290,9 @@ class MonthView extends React.Component {
     notify(onShowMore, [events, date, slot])
   }
 
-  overlayDisplay = () => {
+  hidePopover = () => {
     this.setState({
-      overlay: null,
+      popover: null,
     })
   }
 

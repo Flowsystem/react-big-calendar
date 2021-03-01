@@ -42,6 +42,7 @@
     "build:umd": "BABEL_ENV=esm yarn rollup -c",
     "build:cjs": "babel src --out-dir lib",
     "build": "yarn clean && yarn build:cjs && yarn build:umd && yarn assets && yarn build:css",
+    "build-local": "yarn build && cp -rf dist/ ../react-client/node_modules/react-big-calendar/dist",
     "build:examples": "npm run clean:examples && webpack --config examples/webpack.config.js",
     "examples": "npm run clean:examples && webpack-dev-server --config examples/webpack.config.js --mode development",
     "lint": "eslint src test",
@@ -137,7 +138,7 @@
     "lodash-es": "^4.17.11",
     "memoize-one": "^5.1.1",
     "prop-types": "^15.7.2",
-    "react-overlays": "^4.1.1",
+    "react-popover": "^0.5.10",
     "uncontrollable": "^7.0.0"
   },
   "resolutions": {

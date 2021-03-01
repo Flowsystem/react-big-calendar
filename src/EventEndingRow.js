@@ -74,10 +74,14 @@ class EventEndingRow extends React.Component {
   }
 
   renderShowMore(segments, slot) {
-    let { localizer } = this.props
+    let { localizer, renderPopover } = this.props
     let count = eventsInSlot(segments, slot)
 
-    return count ? (
+    if (!count) {
+      return false
+    }
+
+    return renderPopover(
       <a
         key={'sm_' + slot}
         href="#"
@@ -86,14 +90,12 @@ class EventEndingRow extends React.Component {
       >
         {localizer.messages.showMore(count)}
       </a>
-    ) : (
-      false
     )
   }
 
   showMore(slot, e) {
     e.preventDefault()
-    this.props.onShowMore(slot, e.target)
+    this.props.onShowMore(slot)
   }
 }
 
