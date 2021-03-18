@@ -1,0 +1,89 @@
+diff --git a/src/Calendar.js b/src/Calendar.js
+index 94f7034..c30248d 100644
+--- a/src/Calendar.js
++++ b/src/Calendar.js
+@@ -776,6 +776,12 @@ class Calendar extends React.Component {
+      * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
+      */
+     dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
++
++    navigationDisabled: PropTypes.bool,
++
++    navigationPreviousDisabled: PropTypes.bool,
++
++    navigationNextDisabled: PropTypes.bool,
+   }
+ 
+   static defaultProps = {
+@@ -923,6 +929,9 @@ class Calendar extends React.Component {
+       length,
+       showMultiDayTimes,
+       onShowMore,
++      navigationDisabled,
++      navigationPreviousDisabled,
++      navigationNextDisabled,
+       components: _0,
+       formats: _1,
+       messages: _2,
+@@ -959,6 +968,9 @@ class Calendar extends React.Component {
+             onView={this.handleViewChange}
+             onNavigate={this.handleNavigate}
+             localizer={localizer}
++            navigationDisabled={navigationDisabled}
++            navigationPreviousDisabled={navigationPreviousDisabled}
++            navigationNextDisabled={navigationNextDisabled}
+           />
+         )}
+         <View
+diff --git a/src/Toolbar.js b/src/Toolbar.js
+index 6ea3d34..7e889b2 100644
+--- a/src/Toolbar.js
++++ b/src/Toolbar.js
+@@ -8,6 +8,9 @@ class Toolbar extends React.Component {
+     let {
+       localizer: { messages },
+       label,
++      navigationDisabled,
++      navigationPreviousDisabled,
++      navigationNextDisabled,
+     } = this.props
+ 
+     return (
+@@ -16,18 +19,21 @@ class Toolbar extends React.Component {
+           <button
+             type="button"
+             onClick={this.navigate.bind(null, navigate.TODAY)}
++            disabled={navigationDisabled}
+           >
+             {messages.today}
+           </button>
+           <button
+             type="button"
+             onClick={this.navigate.bind(null, navigate.PREVIOUS)}
++            disabled={navigationDisabled || navigationPreviousDisabled}
+           >
+             {messages.previous}
+           </button>
+           <button
+             type="button"
+             onClick={this.navigate.bind(null, navigate.NEXT)}
++            disabled={navigationDisabled || navigationNextDisabled}
+           >
+             {messages.next}
+           </button>
+@@ -74,6 +80,15 @@ Toolbar.propTypes = {
+   localizer: PropTypes.object,
+   onNavigate: PropTypes.func.isRequired,
+   onView: PropTypes.func.isRequired,
++  navigationDisabled: PropTypes.bool,
++  navigationPreviousDisabled: PropTypes.bool,
++  navigationNextDisabled: PropTypes.bool,
++}
++
++Toolbar.defaultProps = {
++  navigationDisabled: undefined,
++  navigationPreviousDisabled: undefined,
++  navigationNextDisabled: undefined,
+ }
+ 
+ export default Toolbar
