@@ -202,6 +202,7 @@ class MonthView extends React.Component {
       getters,
       selected,
       popupOffset,
+      popoverClassName,
       ...restProps
     } = this.props
 
@@ -210,6 +211,7 @@ class MonthView extends React.Component {
         preferPlace="above"
         isOpen={popover.visible}
         onOuterAction={this.hidePopover}
+        className={popoverClassName}
         body={
           <Popup
             {...restProps}
@@ -363,6 +365,8 @@ MonthView.propTypes = {
       y: PropTypes.number,
     }),
   ]),
+
+  popoverClassName: PropTypes.string,
 }
 
 MonthView.range = (date, { localizer }) => {

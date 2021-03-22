@@ -776,6 +776,8 @@ class Calendar extends React.Component {
      * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
      */
     dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+
+    popoverClassName: PropTypes.string,
   }
 
   static defaultProps = {

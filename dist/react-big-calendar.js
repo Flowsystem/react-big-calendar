@@ -11018,6 +11018,7 @@
             getters = _this$props3.getters,
             selected = _this$props3.selected,
             popupOffset = _this$props3.popupOffset,
+            popoverClassName = _this$props3.popoverClassName,
             restProps = _objectWithoutPropertiesLoose(_this$props3, [
               'accessors',
               'localizer',
@@ -11025,6 +11026,7 @@
               'getters',
               'selected',
               'popupOffset',
+              'popoverClassName',
             ])
 
           return React__default.createElement(
@@ -11033,6 +11035,7 @@
               preferPlace: 'above',
               isOpen: popover.visible,
               onOuterAction: _this.hidePopover,
+              className: popoverClassName,
               body: React__default.createElement(
                 Popup,
                 _extends({}, restProps, {
@@ -11314,6 +11317,7 @@
         y: propTypes.number,
       }),
     ]),
+    popoverClassName: propTypes.string,
   }
 
   MonthView.range = function(date, _ref3) {
@@ -16978,6 +16982,7 @@
      * or custom `Function(events, minimumStartDifference, slotMetrics, accessors)`
      */
     dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+    popoverClassName: propTypes.string,
   }
   var Calendar$1 = uncontrollable(Calendar, {
     view: 'onView',
