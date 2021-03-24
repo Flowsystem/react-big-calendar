@@ -14561,7 +14561,10 @@
       _proto.render = function render() {
         var _this$props = this.props,
           messages = _this$props.localizer.messages,
-          label = _this$props.label
+          label = _this$props.label,
+          navigationDisabled = _this$props.navigationDisabled,
+          navigationPreviousDisabled = _this$props.navigationPreviousDisabled,
+          navigationNextDisabled = _this$props.navigationNextDisabled
         return React__default.createElement(
           'div',
           {
@@ -14577,6 +14580,7 @@
               {
                 type: 'button',
                 onClick: this.navigate.bind(null, navigate.TODAY),
+                disabled: navigationDisabled,
               },
               messages.today
             ),
@@ -14585,6 +14589,7 @@
               {
                 type: 'button',
                 onClick: this.navigate.bind(null, navigate.PREVIOUS),
+                disabled: navigationDisabled || navigationPreviousDisabled,
               },
               messages.previous
             ),
@@ -14593,6 +14598,7 @@
               {
                 type: 'button',
                 onClick: this.navigate.bind(null, navigate.NEXT),
+                disabled: navigationDisabled || navigationNextDisabled,
               },
               messages.next
             )
@@ -14648,6 +14654,14 @@
     localizer: propTypes.object,
     onNavigate: propTypes.func.isRequired,
     onView: propTypes.func.isRequired,
+    navigationDisabled: propTypes.bool,
+    navigationPreviousDisabled: propTypes.bool,
+    navigationNextDisabled: propTypes.bool,
+  }
+  Toolbar.defaultProps = {
+    navigationDisabled: undefined,
+    navigationPreviousDisabled: undefined,
+    navigationNextDisabled: undefined,
   }
 
   /**
@@ -16146,6 +16160,9 @@
           length = _this$props4.length,
           showMultiDayTimes = _this$props4.showMultiDayTimes,
           onShowMore = _this$props4.onShowMore,
+          navigationDisabled = _this$props4.navigationDisabled,
+          navigationPreviousDisabled = _this$props4.navigationPreviousDisabled,
+          navigationNextDisabled = _this$props4.navigationNextDisabled,
           _0 = _this$props4.components,
           _1 = _this$props4.formats,
           _2 = _this$props4.messages,
@@ -16163,6 +16180,9 @@
             'length',
             'showMultiDayTimes',
             'onShowMore',
+            'navigationDisabled',
+            'navigationPreviousDisabled',
+            'navigationNextDisabled',
             'components',
             'formats',
             'messages',
@@ -16197,6 +16217,9 @@
               onView: this.handleViewChange,
               onNavigate: this.handleNavigate,
               localizer: localizer,
+              navigationDisabled: navigationDisabled,
+              navigationPreviousDisabled: navigationPreviousDisabled,
+              navigationNextDisabled: navigationNextDisabled,
             }),
           React__default.createElement(
             View,
@@ -16983,6 +17006,9 @@
      */
     dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
     popoverClassName: propTypes.string,
+    navigationDisabled: propTypes.bool,
+    navigationPreviousDisabled: propTypes.bool,
+    navigationNextDisabled: propTypes.bool,
   }
   var Calendar$1 = uncontrollable(Calendar, {
     view: 'onView',
