@@ -5288,7 +5288,10 @@ var Toolbar =
     _proto.render = function render() {
       var _this$props = this.props,
         messages = _this$props.localizer.messages,
-        label = _this$props.label
+        label = _this$props.label,
+        navigationDisabled = _this$props.navigationDisabled,
+        navigationPreviousDisabled = _this$props.navigationPreviousDisabled,
+        navigationNextDisabled = _this$props.navigationNextDisabled
       return React.createElement(
         'div',
         {
@@ -5304,6 +5307,7 @@ var Toolbar =
             {
               type: 'button',
               onClick: this.navigate.bind(null, navigate.TODAY),
+              disabled: navigationDisabled,
             },
             messages.today
           ),
@@ -5312,6 +5316,7 @@ var Toolbar =
             {
               type: 'button',
               onClick: this.navigate.bind(null, navigate.PREVIOUS),
+              disabled: navigationDisabled || navigationPreviousDisabled,
             },
             messages.previous
           ),
@@ -5320,6 +5325,7 @@ var Toolbar =
             {
               type: 'button',
               onClick: this.navigate.bind(null, navigate.NEXT),
+              disabled: navigationDisabled || navigationNextDisabled,
             },
             messages.next
           )
@@ -5377,8 +5383,16 @@ Toolbar.propTypes =
         localizer: PropTypes.object,
         onNavigate: PropTypes.func.isRequired,
         onView: PropTypes.func.isRequired,
+        navigationDisabled: PropTypes.bool,
+        navigationPreviousDisabled: PropTypes.bool,
+        navigationNextDisabled: PropTypes.bool,
       }
     : {}
+Toolbar.defaultProps = {
+  navigationDisabled: undefined,
+  navigationPreviousDisabled: undefined,
+  navigationNextDisabled: undefined,
+}
 
 /**
  * Retrieve via an accessor-like property
@@ -5724,6 +5738,9 @@ var Calendar =
         length = _this$props4.length,
         showMultiDayTimes = _this$props4.showMultiDayTimes,
         onShowMore = _this$props4.onShowMore,
+        navigationDisabled = _this$props4.navigationDisabled,
+        navigationPreviousDisabled = _this$props4.navigationPreviousDisabled,
+        navigationNextDisabled = _this$props4.navigationNextDisabled,
         _0 = _this$props4.components,
         _1 = _this$props4.formats,
         _2 = _this$props4.messages,
@@ -5741,6 +5758,9 @@ var Calendar =
           'length',
           'showMultiDayTimes',
           'onShowMore',
+          'navigationDisabled',
+          'navigationPreviousDisabled',
+          'navigationNextDisabled',
           'components',
           'formats',
           'messages',
@@ -5775,6 +5795,9 @@ var Calendar =
             onView: this.handleViewChange,
             onNavigate: this.handleNavigate,
             localizer: localizer,
+            navigationDisabled: navigationDisabled,
+            navigationPreviousDisabled: navigationPreviousDisabled,
+            navigationNextDisabled: navigationNextDisabled,
           }),
         React.createElement(
           View,
@@ -6563,6 +6586,9 @@ Calendar.propTypes =
          */
         dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
         popoverClassName: PropTypes.string,
+        navigationDisabled: PropTypes.bool,
+        navigationPreviousDisabled: PropTypes.bool,
+        navigationNextDisabled: PropTypes.bool,
       }
     : {}
 var Calendar$1 = uncontrollable(Calendar, {
