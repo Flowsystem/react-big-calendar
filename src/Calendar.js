@@ -778,6 +778,12 @@ class Calendar extends React.Component {
     dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
 
     popoverClassName: PropTypes.string,
+
+    navigationDisabled: PropTypes.bool,
+
+    navigationPreviousDisabled: PropTypes.bool,
+
+    navigationNextDisabled: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -925,6 +931,9 @@ class Calendar extends React.Component {
       length,
       showMultiDayTimes,
       onShowMore,
+      navigationDisabled,
+      navigationPreviousDisabled,
+      navigationNextDisabled,
       components: _0,
       formats: _1,
       messages: _2,
@@ -961,6 +970,9 @@ class Calendar extends React.Component {
             onView={this.handleViewChange}
             onNavigate={this.handleNavigate}
             localizer={localizer}
+            navigationDisabled={navigationDisabled}
+            navigationPreviousDisabled={navigationPreviousDisabled}
+            navigationNextDisabled={navigationNextDisabled}
           />
         )}
         <View

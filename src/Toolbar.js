@@ -8,6 +8,9 @@ class Toolbar extends React.Component {
     let {
       localizer: { messages },
       label,
+      navigationDisabled,
+      navigationPreviousDisabled,
+      navigationNextDisabled,
     } = this.props
 
     return (
@@ -16,18 +19,21 @@ class Toolbar extends React.Component {
           <button
             type="button"
             onClick={this.navigate.bind(null, navigate.TODAY)}
+            disabled={navigationDisabled}
           >
             {messages.today}
           </button>
           <button
             type="button"
             onClick={this.navigate.bind(null, navigate.PREVIOUS)}
+            disabled={navigationDisabled || navigationPreviousDisabled}
           >
             {messages.previous}
           </button>
           <button
             type="button"
             onClick={this.navigate.bind(null, navigate.NEXT)}
+            disabled={navigationDisabled || navigationNextDisabled}
           >
             {messages.next}
           </button>
@@ -74,6 +80,15 @@ Toolbar.propTypes = {
   localizer: PropTypes.object,
   onNavigate: PropTypes.func.isRequired,
   onView: PropTypes.func.isRequired,
+  navigationDisabled: PropTypes.bool,
+  navigationPreviousDisabled: PropTypes.bool,
+  navigationNextDisabled: PropTypes.bool,
+}
+
+Toolbar.defaultProps = {
+  navigationDisabled: undefined,
+  navigationPreviousDisabled: undefined,
+  navigationNextDisabled: undefined,
 }
 
 export default Toolbar
