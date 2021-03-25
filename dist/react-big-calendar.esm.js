@@ -1705,6 +1705,7 @@ var EventEndingRow =
       }
 
       return renderPopover(
+        slot,
         React.createElement(
           'a',
           {
@@ -2313,7 +2314,7 @@ var MonthView =
         )
       }
 
-      _this.renderPopover = function(showMore) {
+      _this.renderPopover = function(slot, showMore) {
         var popover = (_this.state && _this.state.popover) || {}
 
         var _this$props3 = _this.props,
@@ -2337,8 +2338,9 @@ var MonthView =
         return React.createElement(
           Popover,
           {
+            key: 'popover_' + slot,
             preferPlace: 'above',
-            isOpen: popover.visible,
+            isOpen: popover.visible && popover.slot === slot,
             onOuterAction: _this.hidePopover,
             className: popoverClassName,
             body: React.createElement(
@@ -2438,6 +2440,7 @@ var MonthView =
               visible: true,
               date: date,
               events: events,
+              slot: slot,
             },
           })
         } else {

@@ -10371,6 +10371,7 @@
         }
 
         return renderPopover(
+          slot,
           React__default.createElement(
             'a',
             {
@@ -11008,7 +11009,7 @@
           )
         }
 
-        _this.renderPopover = function(showMore) {
+        _this.renderPopover = function(slot, showMore) {
           var popover = (_this.state && _this.state.popover) || {}
 
           var _this$props3 = _this.props,
@@ -11032,8 +11033,9 @@
           return React__default.createElement(
             reactPopover,
             {
+              key: 'popover_' + slot,
               preferPlace: 'above',
-              isOpen: popover.visible,
+              isOpen: popover.visible && popover.slot === slot,
               onOuterAction: _this.hidePopover,
               className: popoverClassName,
               body: React__default.createElement(
@@ -11133,6 +11135,7 @@
                 visible: true,
                 date: date,
                 events: events,
+                slot: slot,
               },
             })
           } else {
