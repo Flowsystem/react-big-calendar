@@ -82,6 +82,7 @@ class EventEndingRow extends React.Component {
     }
 
     return renderPopover(
+      slot,
       <a
         key={'sm_' + slot}
         href="#"
