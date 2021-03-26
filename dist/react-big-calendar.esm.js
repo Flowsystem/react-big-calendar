@@ -1616,7 +1616,33 @@ var EventEndingRow =
     _inheritsLoose(EventEndingRow, _React$Component)
 
     function EventEndingRow() {
-      return _React$Component.apply(this, arguments) || this
+      var _this
+
+      for (
+        var _len = arguments.length, args = new Array(_len), _key = 0;
+        _key < _len;
+        _key++
+      ) {
+        args[_key] = arguments[_key]
+      }
+
+      _this =
+        _React$Component.call.apply(_React$Component, [this].concat(args)) ||
+        this
+
+      _this.showMore = function(e, onShowMore, slot) {
+        e.preventDefault()
+        var getShowMoreInfo = _this.props.getShowMoreInfo
+
+        var _getShowMoreInfo = getShowMoreInfo(slot),
+          events = _getShowMoreInfo.events,
+          slotRange = _getShowMoreInfo.slotRange,
+          cell = _getShowMoreInfo.cell
+
+        onShowMore(events, slotRange, cell, slot)
+      }
+
+      return _this
     }
 
     var _proto = EventEndingRow.prototype
@@ -1693,37 +1719,36 @@ var EventEndingRow =
     }
 
     _proto.renderShowMore = function renderShowMore(segments, slot) {
-      var _this = this
+      var _this2 = this
 
       var _this$props2 = this.props,
         localizer = _this$props2.localizer,
-        renderPopover = _this$props2.renderPopover
+        renderPopover = _this$props2.renderPopover,
+        getShowMoreInfo = _this$props2.getShowMoreInfo
       var count = eventsInSlot(segments, slot)
+
+      var _getShowMoreInfo2 = getShowMoreInfo(slot),
+        cell = _getShowMoreInfo2.cell
 
       if (!count) {
         return false
       }
 
-      return renderPopover(
-        slot,
-        React.createElement(
+      return renderPopover(cell, function(_ref2) {
+        var onShowMore = _ref2.onShowMore
+        return React.createElement(
           'a',
           {
             key: 'sm_' + slot,
             href: '#',
             className: 'rbc-show-more',
             onClick: function onClick(e) {
-              return _this.showMore(slot, e)
+              _this2.showMore(e, onShowMore, slot)
             },
           },
           localizer.messages.showMore(count)
         )
-      )
-    }
-
-    _proto.showMore = function showMore(slot, e) {
-      e.preventDefault()
-      this.props.onShowMore(slot)
+      })
     }
 
     return EventEndingRow
@@ -1735,7 +1760,7 @@ EventEndingRow.propTypes =
         {
           segments: PropTypes.array,
           slots: PropTypes.number,
-          onShowMore: PropTypes.func,
+          getShowMoreInfo: PropTypes.func,
         },
         EventRowMixin.propTypes
       )
@@ -1854,10 +1879,8 @@ var DateContentRow =
         onSelectSlot(range.slice(slot.start, slot.end + 1), slot)
       }
 
-      _this.handleShowMore = function(slot) {
-        var _this$props2 = _this.props,
-          range = _this$props2.range,
-          onShowMore = _this$props2.onShowMore
+      _this.getShowMoreInfo = function(slot) {
+        var range = _this.props.range
 
         var metrics = _this.slotMetrics(_this.props)
 
@@ -1868,7 +1891,11 @@ var DateContentRow =
         var cell
         if (row) cell = row.children[slot - 1]
         var events = metrics.getEventsForSlot(slot)
-        onShowMore(events, range[slot - 1], cell, slot)
+        return {
+          events: events,
+          slotRange: range[slot - 1],
+          cell: cell,
+        }
       }
 
       _this.createHeadingRef = function(r) {
@@ -1887,9 +1914,9 @@ var DateContentRow =
       }
 
       _this.renderHeadingCell = function(date, index) {
-        var _this$props3 = _this.props,
-          renderHeader = _this$props3.renderHeader,
-          getNow = _this$props3.getNow
+        var _this$props2 = _this.props,
+          renderHeader = _this$props2.renderHeader,
+          getNow = _this$props2.getNow
         return renderHeader({
           date: date,
           key: 'header_' + index,
@@ -1901,11 +1928,11 @@ var DateContentRow =
       }
 
       _this.renderDummy = function() {
-        var _this$props4 = _this.props,
-          className = _this$props4.className,
-          range = _this$props4.range,
-          renderHeader = _this$props4.renderHeader,
-          showAllEvents = _this$props4.showAllEvents
+        var _this$props3 = _this.props,
+          className = _this$props3.className,
+          range = _this$props3.range,
+          renderHeader = _this$props3.renderHeader,
+          showAllEvents = _this$props3.showAllEvents
         return React.createElement(
           'div',
           {
@@ -1972,31 +1999,31 @@ var DateContentRow =
     }
 
     _proto.render = function render() {
-      var _this$props5 = this.props,
-        date = _this$props5.date,
-        rtl = _this$props5.rtl,
-        range = _this$props5.range,
-        className = _this$props5.className,
-        selected = _this$props5.selected,
-        selectable = _this$props5.selectable,
-        renderForMeasure = _this$props5.renderForMeasure,
-        accessors = _this$props5.accessors,
-        getters = _this$props5.getters,
-        components = _this$props5.components,
-        getNow = _this$props5.getNow,
-        renderHeader = _this$props5.renderHeader,
-        onSelect = _this$props5.onSelect,
-        localizer = _this$props5.localizer,
-        onSelectStart = _this$props5.onSelectStart,
-        onSelectEnd = _this$props5.onSelectEnd,
-        onDoubleClick = _this$props5.onDoubleClick,
-        onKeyPress = _this$props5.onKeyPress,
-        resourceId = _this$props5.resourceId,
-        longPressThreshold = _this$props5.longPressThreshold,
-        isAllDay = _this$props5.isAllDay,
-        resizable = _this$props5.resizable,
-        showAllEvents = _this$props5.showAllEvents,
-        renderPopover = _this$props5.renderPopover
+      var _this$props4 = this.props,
+        date = _this$props4.date,
+        rtl = _this$props4.rtl,
+        range = _this$props4.range,
+        className = _this$props4.className,
+        selected = _this$props4.selected,
+        selectable = _this$props4.selectable,
+        renderForMeasure = _this$props4.renderForMeasure,
+        accessors = _this$props4.accessors,
+        getters = _this$props4.getters,
+        components = _this$props4.components,
+        getNow = _this$props4.getNow,
+        renderHeader = _this$props4.renderHeader,
+        onSelect = _this$props4.onSelect,
+        localizer = _this$props4.localizer,
+        onSelectStart = _this$props4.onSelectStart,
+        onSelectEnd = _this$props4.onSelectEnd,
+        onDoubleClick = _this$props4.onDoubleClick,
+        onKeyPress = _this$props4.onKeyPress,
+        resourceId = _this$props4.resourceId,
+        longPressThreshold = _this$props4.longPressThreshold,
+        isAllDay = _this$props4.isAllDay,
+        resizable = _this$props4.resizable,
+        showAllEvents = _this$props4.showAllEvents,
+        renderPopover = _this$props4.renderPopover
       if (renderForMeasure) return this.renderDummy()
       var metrics = this.slotMetrics(this.props)
       var levels = metrics.levels,
@@ -2086,7 +2113,7 @@ var DateContentRow =
                   _extends(
                     {
                       segments: extra,
-                      onShowMore: this.handleShowMore,
+                      getShowMoreInfo: this.getShowMoreInfo,
                       renderPopover: renderPopover,
                     },
                     eventRowProps
@@ -2314,7 +2341,7 @@ var MonthView =
         )
       }
 
-      _this.renderPopover = function(slot, showMore) {
+      _this.renderPopover = function(cell, showMore) {
         var popover = (_this.state && _this.state.popover) || {}
 
         var _this$props3 = _this.props,
@@ -2338,9 +2365,8 @@ var MonthView =
         return React.createElement(
           Popover,
           {
-            key: 'popover_' + slot,
             preferPlace: 'above',
-            isOpen: popover.visible && popover.slot === slot,
+            isOpen: popover.visible && popover.cell === cell,
             onOuterAction: _this.hidePopover,
             className: popoverClassName,
             body: React.createElement(
@@ -2363,7 +2389,9 @@ var MonthView =
               })
             ),
           },
-          showMore
+          showMore({
+            onShowMore: _this.handleShowMore,
+          })
         )
       }
 
@@ -2440,7 +2468,7 @@ var MonthView =
               visible: true,
               date: date,
               events: events,
-              slot: slot,
+              cell: cell,
             },
           })
         } else {
