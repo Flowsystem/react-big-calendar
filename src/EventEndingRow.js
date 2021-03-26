@@ -74,36 +74,42 @@ class EventEndingRow extends React.Component {
   }
 
   renderShowMore(segments, slot) {
-    let { localizer, renderPopover } = this.props
+    let { localizer, renderPopover, getShowMoreInfo } = this.props
     let count = eventsInSlot(segments, slot)
+    const { cell } = getShowMoreInfo(slot)
 
     if (!count) {
       return false
     }
 
-    return renderPopover(
-      slot,
+    return renderPopover(cell, ({ onShowMore }) => (
       <a
         key={'sm_' + slot}
         href="#"
         className={'rbc-show-more'}
-        onClick={e => this.showMore(slot, e)}
+        onClick={e => {
+          this.showMore(e, onShowMore, slot)
+        }}
       >
         {localizer.messages.showMore(count)}
       </a>
-    )
+    ))
   }
 
-  showMore(slot, e) {
+  showMore = (e, onShowMore, slot) => {
     e.preventDefault()
-    this.props.onShowMore(slot)
+    const { getShowMoreInfo } = this.props
+
+    const { events, slotRange, cell } = getShowMoreInfo(slot)
+
+    onShowMore(events, slotRange, cell, slot)
   }
 }
 
 EventEndingRow.propTypes = {
   segments: PropTypes.array,
   slots: PropTypes.number,
-  onShowMore: PropTypes.func,
+  getShowMoreInfo: PropTypes.func,
   ...EventRowMixin.propTypes,
 }
 

@@ -193,7 +193,7 @@ class MonthView extends React.Component {
     ))
   }
 
-  renderPopover = (slot, showMore) => {
+  renderPopover = (cell, showMore) => {
     let popover = (this.state && this.state.popover) || {}
     let {
       accessors,
@@ -208,9 +208,8 @@ class MonthView extends React.Component {
 
     return (
       <Popover
-        key={`popover_${slot}`}
         preferPlace="above"
-        isOpen={popover.visible && popover.slot === slot}
+        isOpen={popover.visible && popover.cell === cell}
         onOuterAction={this.hidePopover}
         className={popoverClassName}
         body={
@@ -233,7 +232,7 @@ class MonthView extends React.Component {
           />
         }
       >
-        {showMore}
+        {showMore({ onShowMore: this.handleShowMore })}
       </Popover>
     )
   }
@@ -284,7 +283,7 @@ class MonthView extends React.Component {
           visible: true,
           date,
           events,
-          slot,
+          cell,
         },
       })
     } else {

@@ -26,8 +26,8 @@ class DateContentRow extends React.Component {
     onSelectSlot(range.slice(slot.start, slot.end + 1), slot)
   }
 
-  handleShowMore = slot => {
-    const { range, onShowMore } = this.props
+  getShowMoreInfo = slot => {
+    const { range } = this.props
     let metrics = this.slotMetrics(this.props)
     let row = qsa(findDOMNode(this), '.rbc-row-bg')[0]
 
@@ -35,7 +35,11 @@ class DateContentRow extends React.Component {
     if (row) cell = row.children[slot - 1]
 
     let events = metrics.getEventsForSlot(slot)
-    onShowMore(events, range[slot - 1], cell, slot)
+    return {
+      events,
+      slotRange: range[slot - 1],
+      cell,
+    }
   }
 
   createHeadingRef = r => {
@@ -191,7 +195,7 @@ class DateContentRow extends React.Component {
               {!!extra.length && (
                 <EventEndingRow
                   segments={extra}
-                  onShowMore={this.handleShowMore}
+                  getShowMoreInfo={this.getShowMoreInfo}
                   renderPopover={renderPopover}
                   {...eventRowProps}
                 />
