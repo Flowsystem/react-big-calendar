@@ -56,9 +56,11 @@ class DateContentRow extends React.Component {
   }
 
   getRowLimit() {
-    let eventHeight = getHeight(this.eventRow)
+    let reservedSpaceForShowMore = 17
+    let eventHeight = getHeight(this.eventRow) - 2
     let headingHeight = this.headingRow ? getHeight(this.headingRow) : 0
-    let eventSpace = getHeight(findDOMNode(this)) - headingHeight
+    let eventSpace =
+      getHeight(findDOMNode(this)) - headingHeight - reservedSpaceForShowMore
 
     return Math.max(Math.floor(eventSpace / eventHeight), 1)
   }
