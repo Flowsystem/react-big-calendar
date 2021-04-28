@@ -35,7 +35,6 @@ import contains from 'dom-helpers/contains'
 import closest from 'dom-helpers/closest'
 import listen from 'dom-helpers/listen'
 import findIndex from 'lodash-es/findIndex'
-import range$1 from 'lodash-es/range'
 import memoize from 'memoize-one'
 import _createClass from '@babel/runtime/helpers/esm/createClass'
 import sortBy from 'lodash-es/sortBy'
@@ -1664,9 +1663,7 @@ var EventEndingRow =
               return isSegmentInSlot(seg, current)
             })[0] || {},
           event = _ref.event,
-          left = _ref.left,
-          right = _ref.right,
-          span = _ref.span //eslint-disable-line
+          left = _ref.left //eslint-disable-line
 
         if (!event) {
           current++
@@ -1675,30 +1672,19 @@ var EventEndingRow =
 
         var gap = Math.max(0, left - lastEnd)
 
-        if (this.canRenderSlotEvent(left, span)) {
-          var content = EventRowMixin.renderEvent(this.props, event)
-
-          if (gap) {
-            row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
-          }
-
-          row.push(EventRowMixin.renderSpan(slots, span, key, content))
-          lastEnd = current = right + 1
-        } else {
-          if (gap) {
-            row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
-          }
-
-          row.push(
-            EventRowMixin.renderSpan(
-              slots,
-              1,
-              key,
-              this.renderShowMore(segments, current)
-            )
-          )
-          lastEnd = current = current + 1
+        if (gap) {
+          row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
         }
+
+        row.push(
+          EventRowMixin.renderSpan(
+            slots,
+            1,
+            key,
+            this.renderShowMore(segments, current)
+          )
+        )
+        lastEnd = current = current + 1
       }
 
       return React.createElement(
@@ -1708,14 +1694,6 @@ var EventEndingRow =
         },
         row
       )
-    }
-
-    _proto.canRenderSlotEvent = function canRenderSlotEvent(slot, span) {
-      var segments = this.props.segments
-      return range$1(slot, slot + span).every(function(s) {
-        var count = eventsInSlot(segments, s)
-        return count === 1
-      })
     }
 
     _proto.renderShowMore = function renderShowMore(segments, slot) {
@@ -1802,7 +1780,7 @@ function getSlotMetrics() {
       return eventSegments(evt, range, accessors)
     })
 
-    var _eventLevels = eventLevels(segments, Math.max(maxRows - 1, 1)),
+    var _eventLevels = eventLevels(segments, Math.max(maxRows, 1)),
       levels = _eventLevels.levels,
       extra = _eventLevels.extra
 
@@ -1884,10 +1862,7 @@ var DateContentRow =
 
         var metrics = _this.slotMetrics(_this.props)
 
-        var row = qsa(
-          findDOMNode(_assertThisInitialized(_this)),
-          '.rbc-row-bg'
-        )[0]
+        var row = qsa(_this.domNode, '.rbc-row-bg')[0]
         var cell
         if (row) cell = row.children[slot - 1]
         var events = metrics.getEventsForSlot(slot)
@@ -1986,15 +1961,22 @@ var DateContentRow =
       }
 
       _this.slotMetrics = getSlotMetrics()
+      _this.domNode = null
       return _this
     }
 
     var _proto = DateContentRow.prototype
 
+    _proto.componentDidMount = function componentDidMount() {
+      this.domNode = findDOMNode(this)
+    }
+
     _proto.getRowLimit = function getRowLimit() {
-      var eventHeight = getHeight(this.eventRow)
+      var reservedSpaceForShowMore = 17
+      var eventHeight = getHeight(this.eventRow) - 2
       var headingHeight = this.headingRow ? getHeight(this.headingRow) : 0
-      var eventSpace = getHeight(findDOMNode(this)) - headingHeight
+      var eventSpace =
+        getHeight(findDOMNode(this)) - headingHeight - reservedSpaceForShowMore
       return Math.max(Math.floor(eventSpace / eventHeight), 1)
     }
 

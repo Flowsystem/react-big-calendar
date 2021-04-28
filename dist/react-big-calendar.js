@@ -10171,101 +10171,6 @@
     ) // then sort by start time
   }
 
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeCeil$1 = Math.ceil,
-    nativeMax$3 = Math.max
-
-  /**
-   * The base implementation of `_.range` and `_.rangeRight` which doesn't
-   * coerce arguments.
-   *
-   * @private
-   * @param {number} start The start of the range.
-   * @param {number} end The end of the range.
-   * @param {number} step The value to increment or decrement by.
-   * @param {boolean} [fromRight] Specify iterating from right to left.
-   * @returns {Array} Returns the range of numbers.
-   */
-  function baseRange(start, end, step, fromRight) {
-    var index = -1,
-      length = nativeMax$3(nativeCeil$1((end - start) / (step || 1)), 0),
-      result = Array(length)
-
-    while (length--) {
-      result[fromRight ? length : ++index] = start
-      start += step
-    }
-    return result
-  }
-
-  /**
-   * Creates a `_.range` or `_.rangeRight` function.
-   *
-   * @private
-   * @param {boolean} [fromRight] Specify iterating from right to left.
-   * @returns {Function} Returns the new range function.
-   */
-  function createRange(fromRight) {
-    return function(start, end, step) {
-      if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
-        end = step = undefined
-      }
-      // Ensure the sign of `-0` is preserved.
-      start = toFinite(start)
-      if (end === undefined) {
-        end = start
-        start = 0
-      } else {
-        end = toFinite(end)
-      }
-      step = step === undefined ? (start < end ? 1 : -1) : toFinite(step)
-      return baseRange(start, end, step, fromRight)
-    }
-  }
-
-  /**
-   * Creates an array of numbers (positive and/or negative) progressing from
-   * `start` up to, but not including, `end`. A step of `-1` is used if a negative
-   * `start` is specified without an `end` or `step`. If `end` is not specified,
-   * it's set to `start` with `start` then set to `0`.
-   *
-   * **Note:** JavaScript follows the IEEE-754 standard for resolving
-   * floating-point values which can produce unexpected results.
-   *
-   * @static
-   * @since 0.1.0
-   * @memberOf _
-   * @category Util
-   * @param {number} [start=0] The start of the range.
-   * @param {number} end The end of the range.
-   * @param {number} [step=1] The value to increment or decrement by.
-   * @returns {Array} Returns the range of numbers.
-   * @see _.inRange, _.rangeRight
-   * @example
-   *
-   * _.range(4);
-   * // => [0, 1, 2, 3]
-   *
-   * _.range(-4);
-   * // => [0, -1, -2, -3]
-   *
-   * _.range(1, 5);
-   * // => [1, 2, 3, 4]
-   *
-   * _.range(0, 20, 5);
-   * // => [0, 5, 10, 15]
-   *
-   * _.range(0, -4, -1);
-   * // => [0, -1, -2, -3]
-   *
-   * _.range(1, 4, 0);
-   * // => [1, 1, 1]
-   *
-   * _.range(0);
-   * // => []
-   */
-  var range$1 = createRange()
-
   var isSegmentInSlot = function isSegmentInSlot(seg, slot) {
     return seg.left <= slot && seg.right >= slot
   }
@@ -10330,9 +10235,7 @@
                 return isSegmentInSlot(seg, current)
               })[0] || {},
             event = _ref.event,
-            left = _ref.left,
-            right = _ref.right,
-            span = _ref.span //eslint-disable-line
+            left = _ref.left //eslint-disable-line
 
           if (!event) {
             current++
@@ -10341,30 +10244,19 @@
 
           var gap = Math.max(0, left - lastEnd)
 
-          if (this.canRenderSlotEvent(left, span)) {
-            var content = EventRowMixin.renderEvent(this.props, event)
-
-            if (gap) {
-              row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
-            }
-
-            row.push(EventRowMixin.renderSpan(slots, span, key, content))
-            lastEnd = current = right + 1
-          } else {
-            if (gap) {
-              row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
-            }
-
-            row.push(
-              EventRowMixin.renderSpan(
-                slots,
-                1,
-                key,
-                this.renderShowMore(segments, current)
-              )
-            )
-            lastEnd = current = current + 1
+          if (gap) {
+            row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
           }
+
+          row.push(
+            EventRowMixin.renderSpan(
+              slots,
+              1,
+              key,
+              this.renderShowMore(segments, current)
+            )
+          )
+          lastEnd = current = current + 1
         }
 
         return React__default.createElement(
@@ -10374,14 +10266,6 @@
           },
           row
         )
-      }
-
-      _proto.canRenderSlotEvent = function canRenderSlotEvent(slot, span) {
-        var segments = this.props.segments
-        return range$1(slot, slot + span).every(function(s) {
-          var count = eventsInSlot(segments, s)
-          return count === 1
-        })
       }
 
       _proto.renderShowMore = function renderShowMore(segments, slot) {
@@ -10502,7 +10386,7 @@
         return eventSegments(evt, range, accessors)
       })
 
-      var _eventLevels = eventLevels(segments, Math.max(maxRows - 1, 1)),
+      var _eventLevels = eventLevels(segments, Math.max(maxRows, 1)),
         levels = _eventLevels.levels,
         extra = _eventLevels.extra
 
@@ -10588,10 +10472,7 @@
 
           var metrics = _this.slotMetrics(_this.props)
 
-          var row = qsa(
-            reactDom.findDOMNode(_assertThisInitialized(_this)),
-            '.rbc-row-bg'
-          )[0]
+          var row = qsa(_this.domNode, '.rbc-row-bg')[0]
           var cell
           if (row) cell = row.children[slot - 1]
           var events = metrics.getEventsForSlot(slot)
@@ -10690,15 +10571,24 @@
         }
 
         _this.slotMetrics = getSlotMetrics()
+        _this.domNode = null
         return _this
       }
 
       var _proto = DateContentRow.prototype
 
+      _proto.componentDidMount = function componentDidMount() {
+        this.domNode = reactDom.findDOMNode(this)
+      }
+
       _proto.getRowLimit = function getRowLimit() {
-        var eventHeight = height(this.eventRow)
+        var reservedSpaceForShowMore = 17
+        var eventHeight = height(this.eventRow) - 2
         var headingHeight = this.headingRow ? height(this.headingRow) : 0
-        var eventSpace = height(reactDom.findDOMNode(this)) - headingHeight
+        var eventSpace =
+          height(reactDom.findDOMNode(this)) -
+          headingHeight -
+          reservedSpaceForShowMore
         return Math.max(Math.floor(eventSpace / eventHeight), 1)
       }
 
@@ -11865,7 +11755,7 @@
   }
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax$4 = Math.max
+  var nativeMax$3 = Math.max
 
   /**
    * A specialized version of `baseRest` which transforms the rest array.
@@ -11877,11 +11767,11 @@
    * @returns {Function} Returns the new function.
    */
   function overRest(func, start, transform) {
-    start = nativeMax$4(start === undefined ? func.length - 1 : start, 0)
+    start = nativeMax$3(start === undefined ? func.length - 1 : start, 0)
     return function() {
       var args = arguments,
         index = -1,
-        length = nativeMax$4(args.length - start, 0),
+        length = nativeMax$3(args.length - start, 0),
         array = Array(length)
 
       while (++index < length) {
