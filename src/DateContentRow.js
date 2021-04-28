@@ -18,6 +18,11 @@ class DateContentRow extends React.Component {
     super(...args)
 
     this.slotMetrics = DateSlotMetrics.getSlotMetrics()
+    this.domNode = null
+  }
+
+  componentDidMount() {
+    this.domNode = findDOMNode(this)
   }
 
   handleSelectSlot = slot => {
@@ -29,7 +34,7 @@ class DateContentRow extends React.Component {
   getShowMoreInfo = slot => {
     const { range } = this.props
     let metrics = this.slotMetrics(this.props)
-    let row = qsa(findDOMNode(this), '.rbc-row-bg')[0]
+    let row = qsa(this.domNode, '.rbc-row-bg')[0]
 
     let cell
     if (row) cell = row.children[slot - 1]
